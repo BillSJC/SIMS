@@ -11,7 +11,8 @@ for class 数据结构 only
         the struct of student infomation
         每个学生的信息包括：学号、姓名、性别、手机号码、数学分数、语文分数
     */
-typedef struct Student{
+typedef struct Stu Student;
+struct Stu{
     //stuno string
     char*   stuno;
     //name string
@@ -24,19 +25,20 @@ typedef struct Student{
     float   scoreChinese;
     //scoreMath
     float   scoreMath;
-}Student;
+}Stu;
 
 
+typedef struct node Node;
     /* node 
         the node struct of list
     */
-typedef struct Node{
+struct node{
    Student* data;
    //next node,end with NULL
    Node*    next;
    //last node,start with NULL
    Node*    last;
-}Node;
+}node;
 
 /* initStudent
     declear a new student student and give it value
@@ -93,6 +95,5 @@ int insertNodeAtNext(Node* n,Student* data){
     the main function
 */
 int main(){
-    Node* listHeaed = initEmptyList();
-
+    Node* listHeaed ;
 }
