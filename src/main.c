@@ -1,15 +1,18 @@
 /*
 made by SJC in 2018.10.19
 last edit 2018.10.20
-for class æ•°æ®ç»“æ„ only
+for class Êı¾İ½á¹¹ only
 */
+
+#define FILEPATH "data.csv"
+#define STRING_MAXLEN 200
 
 #include<stdio.h>
 #include<stdlib.h>
 
     /* student
         the struct of student infomation
-        æ¯ä¸ªå­¦ç”Ÿçš„ä¿¡æ¯åŒ…æ‹¬ï¼šå­¦å·ã€å§“åã€æ€§åˆ«ã€æ‰‹æœºå·ç ã€æ•°å­¦åˆ†æ•°ã€è¯­æ–‡åˆ†æ•°
+        Ã¿¸öÑ§ÉúµÄĞÅÏ¢°üÀ¨£ºÑ§ºÅ¡¢ĞÕÃû¡¢ĞÔ±ğ¡¢ÊÖ»úºÅÂë¡¢ÊıÑ§·ÖÊı¡¢ÓïÎÄ·ÖÊı
     */
 typedef struct Stu Student;
 struct Stu{
@@ -71,19 +74,42 @@ int insertNodeAtEnd(Node* pn,Student data){
         pn = pn->next;
     }
     pn->next = (Node*)malloc(sizeof(Node));
-    pn = pn->next;
-    pn->next = NULL;
-    pn->data = data;
+    pn->next->next = NULL;
+    pn->next->next = pn;
+    pn->next->data = data;
 }
 
-
+/* readFromCSV
+    open the csv files and read the data to the list
+*/
+Node* readFromCSV(){
+    char* name = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    char* stuno = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    char* phone = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    int sex = 0;
+    float scoreC = 0.0;
+    float scoreM = 0.0;
+    Node* np = initEmptyList();
+    FILE* fp ;
+    fp = fopen("data.csv","r");
+    if(fp == NULL){
+        printf("ÎÄ¼şÖ¸ÕëÒì³££¬½«»áÍË³öÏµÍ³\n");
+        system("pause");
+        exit(0);
+    }
+    while(!feof(fp)){
+        fscanf(fp,"%s,%s,%s,%d,%lf,%lf\n",stuno,name,phone,&sex,&scoreC,&scoreM);
+        insertNodeAtEnd(np,initStudent(stuno,name,sex,phone,scoreC,scoreM));
+        printf("SCAN\n");
+    }
+    return np;
+}
 
 /* main
     the main function
 */
 int main(){
-    Node* stuList = (Node*)malloc(sizeof(Node));
-    insertNodeAtEnd(stuList,initStudent("17051823","SJC",1,"18258462816",80.0,85.0));
+    Node* stuList = readFromCSV();
     printf("%s\n",stuList->next->data.name);
     system("pause");
 }
