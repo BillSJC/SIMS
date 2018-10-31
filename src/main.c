@@ -9,6 +9,7 @@ for class 数据结构 only
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 
     /* student
         the struct of student infomation
@@ -28,10 +29,11 @@ struct Stu{
     float   scoreChinese;
     //scoreMath
     float   scoreMath;
-}Stu;
+};
 
 
 typedef struct node Node;
+typedef Node Head;  //Head of swqlist
     /* node 
         the node struct of list
     */
@@ -41,7 +43,7 @@ struct node{
    Node*    next;
    //last node,start with NULL
    Node*    last;
-}node;
+};
 
 /* initStudent
     declear a new student student and give it value
@@ -61,55 +63,94 @@ Student initStudent(char* stuno,char* name,int sex,char* phone,float scoreChines
 /* initEmptyList
     init an empty list and return Node*
 */
-Node* initEmptyList(){
-    return (Node*)malloc(sizeof(Node));
+Head* initEmptyList(){
+    Head* h =  (Head*)malloc(sizeof(Head));
+    h->next = NULL;
+    return h;
 }
 
-/* insertNodeAtNext
+Node* initNode(Student st){
+    Node* np = (Node*)malloc(sizeof(Node));
+    np->data = st;
+    np->next = NULL;
+    np->last = NULL;
+    return np;
+}
+
+/* insertNodeAtEnd
     insert a new node after current node and give it data
 */
-int insertNodeAtEnd(Node* pn,Student data){
-    //Node* pn = n;
-    while(pn->next == NULL){
+int insertNodeAtEnd(Head* head,Student data){
+    Node* pnp;
+    pnp = initNode(data);
+    Node* pn;
+    pn = head->next;
+    if(pn == NULL){
+        head->next = pnp;
+        head->next->last = NULL;
+        return 2;
+    }
+    while(pn->next != NULL){
         pn = pn->next;
     }
-    pn->next = (Node*)malloc(sizeof(Node));
-    pn->next->next = NULL;
-    pn->next->next = pn;
-    pn->next->data = data;
+    pn->next = pnp;
+    pn->next->last = pn;
+    return 1;
+}
+
+char*  strReplace(char* str){
+    int i = 0;
+    printf("RAW:%s\n",str);
+    while(str[i]!='\0'){
+        if(str[i]==','){
+            str[i] = ' ';
+        }
+        i++;
+    }
+    printf("NOW:%s\n",str);
+    return str;
 }
 
 /* readFromCSV
     open the csv files and read the data to the list
 */
-Node* readFromCSV(){
+Head* readFromCSV(){
     char* name = (char*)malloc(sizeof(char)*STRING_MAXLEN);
     char* stuno = (char*)malloc(sizeof(char)*STRING_MAXLEN);
     char* phone = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    char* temp = (char*)malloc(sizeof(char)*STRING_MAXLEN*5);
     int sex = 0;
     float scoreC = 0.0;
     float scoreM = 0.0;
-    Node* np = initEmptyList();
+    Head* head = initEmptyList();
     FILE* fp ;
-    fp = fopen("data.csv","r");
+    fp = fopen("D:\\数据结构\\第一次大作业\\src\\data.csv","r");
     if(fp == NULL){
-        printf("文件指针异常，将会退出系统\n");
+        printf("file poninter error,system will exit\n");
         system("pause");
         exit(0);
+        
     }
     while(!feof(fp)){
-        fscanf(fp,"%s,%s,%s,%d,%lf,%lf\n",stuno,name,phone,&sex,&scoreC,&scoreM);
-        insertNodeAtEnd(np,initStudent(stuno,name,sex,phone,scoreC,scoreM));
-        printf("SCAN\n");
+        fscanf(fp,"%s\n",temp);
+        temp = strReplace(temp);
+        sscanf(temp,"%s %s %s %d %lf %lf",stuno,name,phone,&sex,&scoreC,&scoreM);
+        insertNodeAtEnd(head,initStudent(stuno,name,sex,phone,scoreC,scoreM));
     }
-    return np;
+    return head;
 }
 
 /* main
     the main function
 */
 int main(){
-    Node* stuList = readFromCSV();
-    printf("%s\n",stuList->next->data.name);
+    system("chcp 65001"); //set output charset as GBK
+    Head* stuList = readFromCSV();
+    int i = 0;
+    Node* np = stuList->next;
+    if(np != NULL){
+        printf("%d:%s\n",i,np->data.name);
+        np = np->next;
+    }
     system("pause");
 }
