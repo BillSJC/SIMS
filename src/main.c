@@ -226,6 +226,137 @@ void deleteStudent(Head* head){
     return;
 }
 
+void sortSuccess(){
+    system("cls");
+    printf("\n==================== 学生排序 ====================\n\n"
+    "                   排序完成，按任意键返回"
+    "\n"
+    "==================================================\n\n\n");
+    getch();
+    return;
+}
+
+void sortByStuno(Head* head,int esc){
+    Student temp;
+    int flag;
+    Node* np = head->next;
+    Node* np2 = head->next;
+    for(np=head->next;np->next!=NULL;np=np->next){
+        for(np2=np->next;np2!=NULL;np2=np2->next){
+            flag = 0;
+            if(atoi(np->data.stuno) > atoi(np2->data.stuno)){
+                flag = 1;
+            }
+            if(esc){
+                flag = 1 - flag;
+            }
+            if(flag){
+                temp = np->data;
+                np->data = np2->data;
+                np2->data = temp;
+            }
+        }
+    }
+    sortSuccess();
+    return;
+}
+
+void sortByMath(Head* head,int esc){
+    Student temp;
+    int flag;
+    Node* np = head->next;
+    Node* np2 = head->next;
+    for(np=head->next;np->next!=NULL;np=np->next){
+        for(np2=np->next;np2!=NULL;np2=np2->next){
+            flag = 0;
+            if(np->data.scoreMath > np2->data.scoreMath){
+                flag = 1;
+            }
+            if(esc){
+                flag = 1 - flag;
+            }
+            if(flag){
+                temp = np->data;
+                np->data = np2->data;
+                np2->data = temp;
+            }
+        }
+    }
+    sortSuccess();
+    return;
+}
+
+void sortByChinese(Head* head,int esc){
+    Student temp;
+    int flag;
+    Node* np = head->next;
+    Node* np2 = head->next;
+    for(np=head->next;np->next!=NULL;np=np->next){
+        for(np2=np->next;np2!=NULL;np2=np2->next){
+            flag = 0;
+            if(np->data.scoreChinese > np2->data.scoreChinese){
+                flag = 1;
+            }
+            if(esc){
+                flag = 1 - flag;
+            }
+            if(flag){
+                temp = np->data;
+                np->data = np2->data;
+                np2->data = temp;
+            }
+        }
+    }
+    sortSuccess();
+    return;
+}
+
+void sortMenu(Head* head){
+    char input;
+    while(1){
+        system("cls");
+        printf("\n==================== 排序菜单 ====================\n\n"
+        "                     1、学号升序\n"
+        "                     2、学号降序\n"
+        "                     3、语文降序\n"
+        "                     4、语文升序\n"
+        "                     5、数学升序\n"
+        "                     6、数学降序\n\n"
+        "                     0、返回\n"
+        "==================================================\n\n\n");
+        input = (char)getch();
+        switch(input){
+            case '1':{
+                sortByStuno(head,1);
+                return;
+            }
+            case '2':{
+                sortByStuno(head,0);
+                return;
+            }
+            case '3':{
+                sortByChinese(head,1);
+                return;
+            }
+            case '4':{
+                sortByChinese(head,0);
+                return;
+            }
+            case '5':{
+                sortByMath(head,1);
+                return;
+            }
+            case '6':{
+                sortByMath(head,0);
+                return;
+            }
+            case '0':{
+                return;
+            }
+        }
+    }
+}
+
 void addStudentMenu(Head* head){
     system("cls");
     printf("\n==================== 添加学生 ====================\n\n"
@@ -271,7 +402,8 @@ void showAllStuList(Head* head){
         "                     1、列表排序\n"
         "                     2、修改信息\n"
         "                     3、添加学生\n"
-        "                     4、删除学生\n\n"
+        "                     4、删除学生\n"
+        "                     5、学生统计\n\n"
         "                     0、返回\n"
         "==================================================\n\n\n");
         showStudentList(head);
@@ -282,6 +414,7 @@ void showAllStuList(Head* head){
                 return;
             }
             case '1':{
+                sortMenu(head);
                 break;
             }
             case '2':{
@@ -295,50 +428,14 @@ void showAllStuList(Head* head){
                 deleteStudent(head);
                 break;
             }
+            case '5':{
+                ;
+                break;
+            }
         }
     }
     
 
-}
-
-void sortMenu(Head* head){
-    char input;
-    while(1){
-        system("cls");
-        printf("\n==================== 排序菜单 ====================\n\n"
-        "                     1、学号升序\n"
-        "                     2、学号降序\n"
-        "                     3、语文升序\n"
-        "                     4、语文降序\n"
-        "                     5、数学升序\n"
-        "                     6、数学降序\n\n"
-        "                     0、返回\n"
-        "==================================================\n\n\n");
-        input = (char)getch();
-        switch(input){
-            case '1':{
-                break;
-            }
-            case '2':{
-                break;
-            }
-            case '3':{
-                break;
-            }
-            case '4':{
-                break;
-            }
-            case '5':{
-                break;
-            }
-            case '6':{
-                break;
-            }
-            case '0':{
-                return;
-            }
-        }
-    }
 }
 
 void saveToFile(Head* head){
