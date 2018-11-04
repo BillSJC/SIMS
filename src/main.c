@@ -261,6 +261,180 @@ void sortByStuno(Head* head,int esc){
     return;
 }
 
+
+void countPeople(Head* head){
+    int people=0,man=0,women=0;
+    float manp = 0.0,womenp = 0.0;
+    Node* np = head->next;
+    while(np!= NULL){
+        people++;
+        if(np->data.sex){
+            man++;
+        }else{
+            women++;
+        }
+        np = np->next;
+    }
+    manp = ((float)man/(float)people)*100.0;
+    womenp = ((float)women/(float)people)*100.0;
+    system("cls");
+    printf("\n==================== 人数统计 ====================\n\n"
+    "                     总人数:%d人\n"
+    "                     男生人数:%d人，占比%.2lf\n"
+    "                     男生人数:%d人，占比%.2lf\n\n"
+    "                     按任意键继续\n"
+    "==================================================\n\n\n",people,man,manp,women,womenp);
+    getch();
+    return;
+}
+
+void countChinese(Head* head){
+    int score=0,sec=0;
+    int stemp = 0;
+    system("cls");
+    while(1){
+        printf("\n==================== 语文统计 ====================\n\n"
+        "                       分段线：筛选成绩的分段线\n"
+        "                       以上/以下:输出分段线上还是下的人数\n"
+        "                       0-以下，1-以上\n"
+        "                       请按以下格式输入需要的参数\n\n"
+        "                       {分段线} {以上/以下}\n\n"
+        "==================================================\n\n\n");
+        stemp = scanf("%d %d",&score,&sec);
+        if(stemp||(sec!=1&&sec!=0)){
+            break;
+        }
+        system("cls");
+        printf("输入格式错误，请重试！\n\n");
+    }
+    Head* result = initEmptyList();
+    Node* np = head->next;
+    int count = 0;
+    int flag = 0;
+    while(np!=NULL){
+        if(np->data.scoreChinese == score){
+            insertNodeAtEnd(result,np->data);
+            count++;
+            np = np->next;
+            continue;
+        }
+        if(np->data.scoreChinese > score){
+            flag = 1;
+        }
+        if(sec == 0){
+            flag = 1-flag;
+        }
+        if(flag){
+            insertNodeAtEnd(result,np->data);
+            count++;
+        }
+        np = np->next;
+    }
+    system("cls");
+    char* strc;
+    if(sec){
+        strc = "以上";
+    }else{
+        strc = "以下";
+    }
+    printf("\n==================== 语文统计 ====================\n\n"
+    "              在%d分%s的人共有%d个，具体情况如下\n\n"
+    "                       按任意键继续\n"
+    "==================================================\n\n\n",score,strc,count);
+    showStudentList(result);
+    getch();
+}
+
+void countMath(Head* head){
+    int score=0,sec=0;
+    int stemp = 0;
+    system("cls");
+    while(1){
+        printf("\n==================== 数学统计 ====================\n\n"
+        "                       分段线：筛选成绩的分段线\n"
+        "                       以上/以下:输出分段线上还是下的人数\n"
+        "                       0-以下，1-以上\n"
+        "                       请按以下格式输入需要的参数\n\n"
+        "                       {分段线} {以上/以下}\n\n"
+        "==================================================\n\n\n");
+        stemp = scanf("%d %d",&score,&sec);
+        if(stemp||(sec!=1&&sec!=0)){
+            break;
+        }
+        system("cls");
+        printf("输入格式错误，请重试！\n\n");
+    }
+    Head* result = initEmptyList();
+    Node* np = head->next;
+    int count = 0;
+    int flag = 0;
+    while(np!=NULL){
+        if(np->data.scoreMath == score){
+            insertNodeAtEnd(result,np->data);
+            count++;
+            np = np->next;
+            continue;
+        }
+        if(np->data.scoreMath > score){
+            flag = 1;
+        }
+        if(sec == 0){
+            flag = 1-flag;
+        }
+        if(flag){
+            insertNodeAtEnd(result,np->data);
+            count++;
+        }
+        np = np->next;
+    }
+    system("cls");
+    char* strc;
+    if(sec){
+        strc = "以上";
+    }else{
+        strc = "以下";
+    }
+    printf("\n==================== 数学统计 ====================\n\n"
+    "              在%d分%s的人共有%d个，具体情况如下\n\n"
+    "                       按任意键继续\n"
+    "==================================================\n\n\n",score,strc,count);
+    showStudentList(result);
+    getch();
+}
+
+
+void countMenu(Head* head){
+    char input;
+    while(1){
+        system("cls");
+        printf("\n==================== 学生统计 ====================\n\n"
+        "                     1、统计总人数、男女比例\n"
+        "                     2、统计语文成绩区间\n"
+        "                     3、统计数学成绩区间\n"
+        "                     0、返回\n"
+        "==================================================\n\n\n");
+        input = (char)getch();
+        switch(input){
+            case '1':{
+                countPeople(head);
+                break;
+            }
+            case '2':{
+                countChinese(head);
+                break;
+            }
+            case '3':{
+                countMath(head);
+                break;
+            }
+            case '0':{
+                return;
+            }
+        }
+    }
+}
+
+
 void sortByMath(Head* head,int esc){
     Student temp;
     int flag;
@@ -430,7 +604,7 @@ void showAllStuList(Head* head){
                 break;
             }
             case '5':{
-                ;
+                countMenu(head);
                 break;
             }
         }
@@ -439,70 +613,11 @@ void showAllStuList(Head* head){
 
 }
 
-void countPeople(Head* head){
-    int people=0,man=0,women=0;
-    float manp = 0.0,womenp = 0.0;
-    Node* np = head->next;
-    while(np!= NULL){
-        people++;
-        if(np->data.sex){
-            man++;
-        }else{
-            women++;
-        }
-        np = np->next;
-    }
-    manp = ((float)man/(float)people)*100.0;
-    womenp = ((float)women/(float)people)*100.0;
-    system("cls");
-    printf("\n==================== 人数统计 ====================\n\n"
-    "                     总人数:%d人\n"
-    "                     男生人数:%d人，占比%.2lf\n"
-    "                     男生人数:%d人，占比%.2lf\n\n"
-    "                     按任意键继续\n"
-    "==================================================\n\n\n",people,man,manp,women,womenp);
-    getch();
-    return;
-}
+/**
+ * 
 
-void countChinese(Head* head){
-    system("cls");
-    printf("\n==================== 语文统计 ====================\n\n"
-    "                     总人数:%d人\n"
-    "                     男生人数:%d人，占比%.2lf\n"
-    "                     男生人数:%d人，占比%.2lf\n\n"
-    "                     按任意键继续\n"
-    "==================================================\n\n\n");
-}
-
-void countMenu(Head* head){
-    char input;
-    while(1){
-        system("cls");
-        printf("\n==================== 学生统计 ====================\n\n"
-        "                     1、统计总人数、男女比例\n"
-        "                     2、统计语文成绩区间\n"
-        "                     3、统计数学成绩区间\n"
-        "                     0、返回\n"
-        "==================================================\n\n\n");
-        input = (char)getch();
-        switch(input){
-            case '1':{
-                countPeople(head);
-                break;
-            }
-            case '2':{
-                break;
-            }
-            case '3':{
-                break;
-            }
-            case '0':{
-                return;
-            }
-        }
-    }
-}
+ * 
+*/
 
 void saveToFile(Head* head){
     remove(FILEPATH);
@@ -523,6 +638,179 @@ void saveToFile(Head* head){
     return;
 }
 
+void editMenu(Head* head){
+    system("cls");
+    printf("\n==================== 修改信息 ====================\n\n"
+    "                   请输入要修改的学号\n"
+    "==================================================\n\n\n");
+    char* temp = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    scanf("%s",temp);
+    Head* rs = initEmptyList();
+    Node* np = head->next;
+    Node* tar;
+    while(np != NULL){
+        if(strcmp(temp,np->data.stuno)==0){
+            insertNodeAtEnd(rs,np->data);
+            tar = np;
+            break;
+        }
+        np = np->next;
+    }
+    if(rs->next == NULL){
+        system("cls");
+        printf("\n==================== 修改信息 ====================\n\n"
+        "                   学号不存在，按任意键继续\n"
+        "==================================================\n\n\n");
+        getch();
+        return;
+    }
+    system("cls");
+    printf("\n==================== 修改信息 ====================\n\n"
+    "        查询结果如下，按照以下格式输入新的数据\n\n"
+    "        学号,姓名,手机号,性别,语文成绩,数学成绩\n"
+    "\n             性别:0-女，1-男"
+    "\n             输入完成后请按回车键，输入#返回上级菜单\n"
+    "==================================================\n\n\n");
+    showStudentList(rs);
+    char* stuno = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    char* name = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    char* phone = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    int sex = 0;
+    int tempi = 0;
+    char* temps = (char*)malloc(sizeof(char)*STRING_MAXLEN*5);
+    int chinese = 0;
+    int math = 0;
+    scanf("%s",temps);
+    if(strcmp(temps,"#")==0){
+        return;
+    }
+    temps = strReplace(temps);
+    tempi = sscanf(temps,"%s %s %s %d %d %d",stuno,name,phone,&sex,&chinese,&math);\
+    if(tempi != 6){
+        system("cls");
+        printf("\n==================== 修改信息 ====================\n\n"
+        "                   格式错误，按任意键返回...\n"
+        "==================================================\n\n\n");
+        getch();
+        return;
+    }
+    tar->data = initStudent(stuno,name,sex,phone,chinese,math);
+        system("cls");
+        printf("\n==================== 修改信息 ====================\n\n"
+        "                   修改成功，按任意键返回...\n"
+        "==================================================\n\n\n");
+        getch();
+        return;
+}
+
+void searchMenu(Head* head){
+    char input;
+    Head* result;
+    char** conds= (char**)malloc(sizeof(char*)*20);
+    char* temp = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+    int* condi= (int*)malloc(sizeof(int)*20);
+    int* condb= (int*)malloc(sizeof(int)*20);
+    int condsc = 0;
+    int tempi = 0;
+    int flag;
+    int i;
+    int condri;
+    //while(1){
+        system("cls");
+        printf("\n==================== 查询 ====================\n\n"
+        "               请输入查找关键字和查找项\n"
+        "                     1-学号\n"
+        "                     2-姓名\n"
+        "                     3-手机号\n"
+        "                     4-性别(0-女，1-男)\n\n"
+        "                     1-与\n"
+        "                     2-或\n"
+        "                     3-非\n"
+        "                     格式如下:\n\n"
+        "                  {与或非},{查找项},{查找关键字}\n\n"
+        "                   输入#结束输入\n"
+        "==================================================\n\n\n");
+        while(1){
+            conds[condsc] = (char*)malloc(sizeof(char)*STRING_MAXLEN);
+            scanf("%s",temp);
+            temp = strReplace(temp);
+            if(strcmp(temp,"#")==0){
+                break;
+            }
+            tempi = sscanf(temp,"%d %d %s",&condb[condsc],&condi[condsc],conds[condsc]);
+            if(tempi != 3){
+                printf("条件输入错误，请重新输入\n");
+                continue;
+            }else{
+                condsc++;
+                printf("条件输入成功");
+            }
+        }
+    if(condsc==0){
+        return;
+    }
+    //searchBody
+    result = initEmptyList();
+    Node* np = head->next;
+    while(np != NULL){
+        condri = 1;
+        tempi = 0;
+        for(i=0;i<condsc;i++){
+            switch(condi[i]){
+                case 1 :{
+                    if(strcmp(np->data.stuno,conds[i])==0){
+                        flag = 1;
+                    }else{
+                        flag = 0;
+                    }
+                    break;
+                }
+                case 2 :{
+                    if(strcmp(np->data.name,conds[i])==0){
+                        flag = 1;
+                    }else{
+                        flag = 0;
+                    }
+                    break;
+                }
+                case 3 :{
+                    if(strcmp(np->data.phone,conds[i])==0){
+                        flag = 1;
+                    }else{
+                        flag = 0;
+                    }
+                    break;
+                }
+            }
+            switch(condb[i]){
+                case 1:{
+                    condri = condri&&flag;
+                    break;
+                }
+                case 2:{
+                    condri = condri||flag;
+                    break;
+                }
+                case 3:{
+                    condri = condri&&(!flag);
+                    break;
+                }
+            }
+        }
+        if(condri == 1){
+            insertNodeAtEnd(result,np->data);
+        }
+        np = np->next;
+    }
+
+    system("cls");
+    printf("==================== 搜索结果 ====================\n"
+    "\n               按任意键继续...\n\n");
+    showStudentList(result);
+    getch();
+    return;
+}
+
 void mainMenu(Head* head){
     char input;
     int temp;
@@ -534,6 +822,7 @@ void mainMenu(Head* head){
 "                     2、学生查询\n"
 "                     3、添加学生\n"
 "                     4、学生统计\n"
+"                     5、修改信息\n"
 "                     \n"
 "                     0、退出系统\n");
 
@@ -544,6 +833,7 @@ void mainMenu(Head* head){
             break;
         };
         case '2':{
+            searchMenu(head);
             break;
         }
         case '3':{
@@ -552,6 +842,10 @@ void mainMenu(Head* head){
         }
         case '4':{
             countMenu(head);
+            break;
+        }
+        case '5':{
+            editMenu(head);
             break;
         }
         case '0':{
