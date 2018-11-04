@@ -46,8 +46,40 @@ struct node{
    Node*    last;
 };
 
-/* initStudent
-    declear a new student student and give it value
+// func declearations
+Student initStudent(char* stuno,char* name,int sex,char* phone,int scoreChinese,int scoreMath);
+Head* initEmptyList();
+Node* initNode(Student st);
+Head* insertNodeAtEnd(Head* head,Student data);
+char*  strReplace(char* str);
+Head* readFromCSV();
+char* sexTransfer(int input);
+void showStudentList(Head* head);
+void delSuccess();
+void delFaild();
+void deleteStudent(Head* head);
+void sortSuccess();
+void sortByStuno(Head* head,int esc);
+void sortByMath(Head* head,int esc);
+void sortByChinese(Head* head,int esc);
+void countPeople(Head* head);
+void countChinese(Head* head);
+void countMath(Head* head);
+void countMenu(Head* head);
+void sortMenu(Head* head);
+void addStudentMenu(Head* head);
+void showAllStuList(Head* head);
+void saveToFile(Head* head);
+void editMenu(Head* head);
+void searchMenu(Head* head);
+void mainMenu(Head* head);
+int main();
+
+
+
+/** initStudent
+ * init and return a student struct
+ * 
 */
 Student initStudent(char* stuno,char* name,int sex,char* phone,int scoreChinese,int scoreMath){
     Student stu;
@@ -76,6 +108,9 @@ Head* initEmptyList(){
     return h;
 }
 
+/* initNode
+    init an empty node
+*/
 Node* initNode(Student st){
     Node* np = (Node*)malloc(sizeof(Node));
     np->data = st;
@@ -103,6 +138,10 @@ Head* insertNodeAtEnd(Head* head,Student data){
     return head;
 }
 
+/** strReplace
+ * 
+ * 
+*/
 char*  strReplace(char* str){
     int i = 0;
     while(str[i]!='\0'){
@@ -142,6 +181,9 @@ Head* readFromCSV(){
     return head;
 }
 
+/** sexTransfer
+ * transfer sex from int to student
+ */
 char* sexTransfer(int input){
     if(input){
         return "男";
@@ -150,6 +192,9 @@ char* sexTransfer(int input){
     }
 }
 
+/** showStudentList
+ * print student info by this format and input list
+*/
 void showStudentList(Head* head){
     int id = 0;
     printf("%6s|%10s|%10s|%15s|%5s|%10s|%10s\n","id","学号","姓名","手机","性别","语文","数学");
@@ -163,6 +208,10 @@ void showStudentList(Head* head){
     char temp = getch();
 }
 
+/** delSuccess
+ * show success msg when delete stu info success
+ * 
+*/
 void delSuccess(){
     printf("\n==================== 删除学生 ====================\n\n"
     "              删除成功，按任意键继续"
@@ -172,6 +221,11 @@ void delSuccess(){
     return;
 }
 
+
+/** delFaild
+ * show failed msg when delete stu info unsuccessful
+ * 
+*/
 void delFaild(){
     printf("\n==================== 删除学生 ====================\n\n"
     "              删除失败，按任意键继续"
@@ -181,6 +235,10 @@ void delFaild(){
     return;
 }
 
+/** deleteStudent
+ * delete student by stuno and print the result
+ * 
+*/
 void deleteStudent(Head* head){
     system("cls");
     printf("\n==================== 删除学生 ====================\n\n"
@@ -194,6 +252,7 @@ void deleteStudent(Head* head){
     scanf("%d",&delid);
     Node* np = head->next;
     i = 1;
+    //if you want to del the first data
     if(delid == 1){
         if(head->next->next == NULL){
             head->next = NULL;
@@ -206,6 +265,7 @@ void deleteStudent(Head* head){
             return;
         }
     }
+    //if not the first
     while(np != NULL){
         if(i == delid){
             if(np->next == NULL){
@@ -226,6 +286,11 @@ void deleteStudent(Head* head){
     return;
 }
 
+
+/** sortSuccess
+ * printf success msg when sort the data success
+ * 
+*/
 void sortSuccess(){
     system("cls");
     printf("\n==================== 学生排序 ====================\n\n"
@@ -281,7 +346,7 @@ void countPeople(Head* head){
     printf("\n==================== 人数统计 ====================\n\n"
     "                     总人数:%d人\n"
     "                     男生人数:%d人，占比%.2lf\n"
-    "                     男生人数:%d人，占比%.2lf\n\n"
+    "                     女生人数:%d人，占比%.2lf\n\n"
     "                     按任意键继续\n"
     "==================================================\n\n\n",people,man,manp,women,womenp);
     getch();
@@ -867,5 +932,5 @@ int main(){
     //system("chcp 65001"); //set output charset as GBK
     Head* stuList = readFromCSV();
     mainMenu(stuList);
-    system("pause");
+    return 1;
 }
