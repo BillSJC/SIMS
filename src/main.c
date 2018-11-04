@@ -27,9 +27,9 @@ struct Stu{
     //phoneNum string
     char*   phone;
     //scoreChinese float.2
-    float   scoreChinese;
+    int   scoreChinese;
     //scoreMath
-    float   scoreMath;
+    int   scoreMath;
 };
 
 
@@ -49,7 +49,7 @@ struct node{
 /* initStudent
     declear a new student student and give it value
 */
-Student initStudent(char* stuno,char* name,int sex,char* phone,float scoreChinese,float scoreMath){
+Student initStudent(char* stuno,char* name,int sex,char* phone,int scoreChinese,int scoreMath){
     Student stu;
     //if memory not enogh then return NULL
     char* stunoc = (char*)malloc(sizeof(char)*STRING_MAXLEN);
@@ -92,12 +92,14 @@ Head* insertNodeAtEnd(Head* head,Student data){
     pn = head->next;
     if(pn == NULL){
         head->next = initNode(data);
+        head->next->last = NULL;
         return head;
     }
     while(pn->next != NULL){
         pn = pn->next;
     }
     pn->next = initNode(data);
+    pn->next->last = pn;
     return head;
 }
 
@@ -121,8 +123,8 @@ Head* readFromCSV(){
     char* phone = (char*)malloc(sizeof(char)*STRING_MAXLEN);
     char* temp = (char*)malloc(sizeof(char)*STRING_MAXLEN*5);
     int sex = 0;
-    float scoreC = 0.0;
-    float scoreM = 0.0;
+    int scoreC = 0;
+    int scoreM = 0;
     Head* head = initEmptyList();
     FILE* fp ;
     fp = fopen(FILEPATH,"r");
@@ -133,7 +135,7 @@ Head* readFromCSV(){
     while(!feof(fp)){
         fscanf(fp,"%s\n",temp);
         temp = strReplace(temp);
-        sscanf(temp,"%s %s %s %d %lf %lf",stuno,name,phone,&sex,&scoreC,&scoreM);
+        sscanf(temp,"%s %s %s %d %d %d",stuno,name,phone,&sex,&scoreC,&scoreM);
         head = insertNodeAtEnd(head,initStudent(stuno,name,sex,phone,scoreC,scoreM));
     }
     fclose(fp);
@@ -150,15 +152,33 @@ char* sexTransfer(int input){
 
 void showStudentList(Head* head){
     int id = 0;
-    printf("%6s|%15s|%15s|%15s|%5s|%10s|%10s\n","id","学号","姓名","手机","性别","语文","数学");
+    printf("%6s|%10s|%10s|%15s|%5s|%10s|%10s\n","id","学号","姓名","手机","性别","语文","数学");
     Node* np = head->next;
     while(np != NULL){
         id++;
-        printf("----------------------------------------------------------------------------\n");
-        printf("%6d|%15s|%15s|%15s|%5s|%10.2lf|%10.2lf\n",id,np->data.stuno,np->data.name,np->data.phone,sexTransfer(np->data.sex),np->data.scoreChinese,np->data.scoreMath);
+        printf("-------------------------------------------------------------------------------\n");
+        printf("%6d|%10s|%10s|%15s|%5s|%10d|%10d\n",id,np->data.stuno,np->data.name,np->data.phone,sexTransfer(np->data.sex),np->data.scoreChinese,np->data.scoreMath);
         np = np->next;
     }
     char temp = getch();
+}
+
+void delSuccess(){
+    printf("\n==================== 删除学生 ====================\n\n"
+    "              删除成功，按任意键继续"
+    "\n"
+    "==================================================\n\n\n");
+    getch();
+    return;
+}
+
+void delFaild(){
+    printf("\n==================== 删除学生 ====================\n\n"
+    "              删除失败，按任意键继续"
+    "\n"
+    "==================================================\n\n\n");
+    getch();
+    return;
 }
 
 void deleteStudent(Head* head){
@@ -174,11 +194,36 @@ void deleteStudent(Head* head){
     scanf("%d",&delid);
     Node* np = head->next;
     i = 1;
-    while(np != NULL){
-        if(i==delid){
-            
+    if(delid == 1){
+        if(head->next->next == NULL){
+            head->next = NULL;
+            delSuccess();
+            return;
+        }else{
+            head->next = head->next->next;
+            head->next->last = NULL;
+            delSuccess();
+            return;
         }
     }
+    while(np != NULL){
+        if(i == delid){
+            if(np->next == NULL){
+                np->last->next = NULL;
+                delSuccess();
+                return;
+            }else{
+                np->next->last = np->last;
+                np->last->next = np->next;
+                delSuccess();
+                return;
+            }
+        }
+        i++;
+        np = np->next;
+    }
+    delFaild();
+    return;
 }
 
 void addStudentMenu(Head* head){
@@ -196,15 +241,15 @@ void addStudentMenu(Head* head){
     int sex = 0;
     int temp = 0;
     char* temps = (char*)malloc(sizeof(char)*STRING_MAXLEN*5);
-    float chinese = 0.0;
-    float math = 0.0;
+    int chinese = 0;
+    int math = 0;
     while(1){
         scanf("%s",temps);
         if(strcmp(temps,"#")==0){
             return;
         }
         temps = strReplace(temps);
-        temp = sscanf(temps,"%s %s %s %d %f %f",stuno,name,phone,&sex,&chinese,&math);\
+        temp = sscanf(temps,"%s %s %s %d %d %d",stuno,name,phone,&sex,&chinese,&math);\
         if(temp == 6){
             break;
         }
@@ -247,12 +292,72 @@ void showAllStuList(Head* head){
                 break;
             }
             case '4':{
+                deleteStudent(head);
                 break;
             }
         }
     }
     
 
+}
+
+void sortMenu(Head* head){
+    char input;
+    while(1){
+        system("cls");
+        printf("\n==================== 排序菜单 ====================\n\n"
+        "                     1、学号升序\n"
+        "                     2、学号降序\n"
+        "                     3、语文升序\n"
+        "                     4、语文降序\n"
+        "                     5、数学升序\n"
+        "                     6、数学降序\n\n"
+        "                     0、返回\n"
+        "==================================================\n\n\n");
+        input = (char)getch();
+        switch(input){
+            case '1':{
+                break;
+            }
+            case '2':{
+                break;
+            }
+            case '3':{
+                break;
+            }
+            case '4':{
+                break;
+            }
+            case '5':{
+                break;
+            }
+            case '6':{
+                break;
+            }
+            case '0':{
+                return;
+            }
+        }
+    }
+}
+
+void saveToFile(Head* head){
+    remove(FILEPATH);
+    FILE* fp = fopen(FILEPATH,"w+");
+    if(head->next == NULL){
+        fclose(fp);
+    }else{
+        Node* np = head->next;
+        while(np != NULL){
+            fprintf(fp,"%s,%s,%s,%d,%d,%d",np->data.stuno,np->data.name,np->data.phone,np->data.sex,np->data.scoreChinese,np->data.scoreMath);
+            if(np->next != NULL){
+                fprintf(fp,"\n");
+            }
+            np = np->next;
+        }
+        fclose(fp);
+    }
+    return;
 }
 
 void mainMenu(Head* head){
@@ -282,7 +387,8 @@ void mainMenu(Head* head){
             break;
         }
         case '0':{
-            break;
+            saveToFile(head);
+            exit(0);
         }
         default:{
             break;
