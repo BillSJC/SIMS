@@ -360,9 +360,10 @@ void sortMenu(Head* head){
 void addStudentMenu(Head* head){
     system("cls");
     printf("\n==================== 添加学生 ====================\n\n"
-    "              请按照以下格式输入要添加的学生信息"
+    "              请按照以下格式输入要添加的学生信息\n"
     "\n"
     "        学号,姓名,手机号,性别,语文成绩,数学成绩\n"
+    "\n             性别:0-女，1-男"
     "\n             输入完成后请按回车键，输入#返回上级菜单\n"
     "\n"
     "==================================================\n\n\n");
@@ -438,6 +439,71 @@ void showAllStuList(Head* head){
 
 }
 
+void countPeople(Head* head){
+    int people=0,man=0,women=0;
+    float manp = 0.0,womenp = 0.0;
+    Node* np = head->next;
+    while(np!= NULL){
+        people++;
+        if(np->data.sex){
+            man++;
+        }else{
+            women++;
+        }
+        np = np->next;
+    }
+    manp = ((float)man/(float)people)*100.0;
+    womenp = ((float)women/(float)people)*100.0;
+    system("cls");
+    printf("\n==================== 人数统计 ====================\n\n"
+    "                     总人数:%d人\n"
+    "                     男生人数:%d人，占比%.2lf\n"
+    "                     男生人数:%d人，占比%.2lf\n\n"
+    "                     按任意键继续\n"
+    "==================================================\n\n\n",people,man,manp,women,womenp);
+    getch();
+    return;
+}
+
+void countChinese(Head* head){
+    system("cls");
+    printf("\n==================== 语文统计 ====================\n\n"
+    "                     总人数:%d人\n"
+    "                     男生人数:%d人，占比%.2lf\n"
+    "                     男生人数:%d人，占比%.2lf\n\n"
+    "                     按任意键继续\n"
+    "==================================================\n\n\n");
+}
+
+void countMenu(Head* head){
+    char input;
+    while(1){
+        system("cls");
+        printf("\n==================== 学生统计 ====================\n\n"
+        "                     1、统计总人数、男女比例\n"
+        "                     2、统计语文成绩区间\n"
+        "                     3、统计数学成绩区间\n"
+        "                     0、返回\n"
+        "==================================================\n\n\n");
+        input = (char)getch();
+        switch(input){
+            case '1':{
+                countPeople(head);
+                break;
+            }
+            case '2':{
+                break;
+            }
+            case '3':{
+                break;
+            }
+            case '0':{
+                return;
+            }
+        }
+    }
+}
+
 void saveToFile(Head* head){
     remove(FILEPATH);
     FILE* fp = fopen(FILEPATH,"w+");
@@ -467,6 +533,7 @@ void mainMenu(Head* head){
 "                     1、学生列表\n"
 "                     2、学生查询\n"
 "                     3、添加学生\n"
+"                     4、学生统计\n"
 "                     \n"
 "                     0、退出系统\n");
 
@@ -481,6 +548,10 @@ void mainMenu(Head* head){
         }
         case '3':{
             addStudentMenu(head);
+            break;
+        }
+        case '4':{
+            countMenu(head);
             break;
         }
         case '0':{
